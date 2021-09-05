@@ -132,7 +132,7 @@ I plotted the loss function over the epochs. The loss for the training decreases
  ![alt text][image2] 
  
  
-The video run.mp4 shows the car driving autonomously on the first track. It drives around the entire track without a critical situation. However, there are some situations, especially in curves, where the driving behavior can still be improved. 
+The video `video.mp4` shows the car driving autonomously on the first track. It drives around the entire track without a critical situation. However, there are some situations, especially in curves, where the driving behavior can still be improved. 
 Since the resulting behavior was sufficient the model is no further tuned.  
 
 I've also tested the second track and it drives around but it works not good enough. Some situations are dangerous or where it leaves the road. The main reason for this is that there is not enough data for the second track available. The driving behavior can be improved that the car drives accident-free on the second track. Due to time constraints, I couldn't generate more data for the second track. This is a future task which I will do when I have enough time. 
