@@ -15,26 +15,103 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image1]: ./img/Architecture.png "Model Architecture"
+[image2]: ./img/loss.jpg "Loss"
+[image3]: ./img/centers_mask.jpg "Image before cropping"
+[image4]: ./img/center_cutout.jpg "Image after cropping"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
 ---
 
-### Project structure
+## Project structure
 
 * model.py Code to train a neural network for the Behavioral Cloning task
 * drive.py The code to drive the car in autonomous mode
 * model.h5 The weights of the trained neural network
 * video.py Convert recorded images into a video
 * run.mp4 The recorded car in autonomous mode. 
+
+### Usage 
+
+To train the neural network run 
+```
+python model.py
+```
+
+Change the argument of the `load_samples` function to the path of the driving_log.csv.
+
+Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
+```
+python drive.py model.h5
+```
+
+To record the autonomously car execute
+
+```
+python drive.py model.h5 run
+```
+
+The images then are stored in the `run` folder. 
+
+## Data Collection
+
+The first track is driven forwards and in reverse dircection to achieve a better generalization of the first track. Additionally there are image sequences where the drive off the center to left or right and the correction to back to center was recorded. Another image sequence was that we start off the left/right  and drive to the center of the lane. 
+
+To improve further the generalization there are several rounds on the second track recorded. 
+
+
+## Model Architecture and Training Strategy
+
+### 1. Model Architecture 
+
+The model architecture is based on the [Blog End-to-End Deep Learning for Self-Driving Cars](https://developer.nvidia.com/blog/deep-learning-self-driving-cars/)
+
+  
+<p align="center">
+  <img src="./img/Architecture.png ">
+</p>
+
+
+
+Follow adaptions are made to the architecture:
+
+* Normalization layer 
+
+  A layer which normalizes each color channel 
+* Cropping 
+
+  The recorded images show then entire scence, which includes the sky, the landscape, the road. To train the neural network do drive around the track, such informations 
+  as the landscape or the sky are not relevant.
+  
+  Therefore I decided to cut out an area of the image with the important information for the training. This is done by cutting 70 pixels from the top and 25 pixels from   the bottom. The following images show an image of the center before and after the cropping. The red area shows the area which remains after the cropping was done.
+
+  ![alt text][image3]  |  ![alt text][image4]
+  
+After the normalization and cropping, five convolutional layers are following. The filter kernel for each convolutional layer is a (5,5) kernel with a (2,2) stride. 
+Then 4 fully connected layers after the convolutional layers are used to give the new steering angle. 
+  
+
+### 2. Training Process
+
+#### Data Augmentation
+
+In the original approach by NVIDEA the applied a rotation and shift to the images. 
+
+I used the center, left, and right images without a rotation or shift. To use the left and right images, we change the steering angle of these images with a correction factor.
+I tested various values in the range between -0.5 and 0.5 and achieved with values of 0.25 for the left camera and -0.25 for the right camera good results. 
+
+This increases the training samples by a factor of 3. During the training randomly a left, right, or center image is selected. The steering angle adds the corresponding correction factor. 
+
+The next step was to apply a flip of the selected image. This data augmentation doubles the size of the training data. The steering angle must also be flipped by multiplication with a -1.
+
+The generation of the training samples is done with the generator function `generator`. In this function implements the previous described steps. 
+
+#### Model Parameters and Overfitting
+
+To prevent overfitting I used the simple approach to limit the number of epochs. This limit is set to 5 epochs. 
+ ![alt text][image2] 
 
 ### Files Submitted & Code Quality
 
