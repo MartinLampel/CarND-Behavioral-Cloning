@@ -103,7 +103,7 @@ history_object = model.fit_generator(train_generator, \
             steps_per_epoch=ceil(len(train_samples)/batch_size), \
             validation_data=validation_generator, \
             validation_steps=ceil(len(validation_samples)/batch_size), \
-            epochs=3, verbose=1)
+            epochs=5, verbose=1)
 
 
 model.save('model.h5')
