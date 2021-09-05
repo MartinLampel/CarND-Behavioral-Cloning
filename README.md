@@ -27,6 +27,15 @@ The goals / steps of this project are the following:
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
 ---
+
+### Project structure
+
+* model.py Code to train a neural network for the Behavioral Cloning task
+* drive.py The code to drive the car in autonomous mode
+* model.h5 The weights of the trained neural network
+* video.py Convert recorded images into a video
+* run.mp4 The recorded car in autonomous mode. 
+
 ### Files Submitted & Code Quality
 
 #### 1. Submission includes all required files and can be used to run the simulator in autonomous mode
